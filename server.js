@@ -350,6 +350,7 @@ app.post("/api/chat", (req, res) => {
 // =======================
 // Démarrage serveur
 // =======================
+require("./cron/autoMessages.js");
 app.listen(PORT, () => {
   console.log(`Serveur actif sur le port ${PORT}`);
 });
