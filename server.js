@@ -1,17 +1,20 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import express from "express";
+import fs from "fs";
+import path from "path";
+import cors from "cors";
+import bodyParser from "body-parser";
+import Stripe from "stripe";
+import nodemailer from "nodemailer";
+import ical from "ical";
+import { fileURLToPath } from "url"; // Ajouté pour __dirname en ES Modules
+import fetch from "node-fetch"; // Ajouté pour les requêtes iCal
 
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const Stripe = require("stripe");
-const nodemailer = require("nodemailer");
-const ical = require("ical");
+dotenv.config();
 
-// Pour récupérer les .ics
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+// Configuration pour __dirname en ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -29,10 +32,6 @@ const STRIPE_BOOKINGS_FILE = path.join(__dirname, "stripeBookings.json");
 // Variables d'environnement
 // =======================
 const OWNER_EMAIL = process.env.OWNER_EMAIL || null;
-const WHATSAPP_NUMBERS = process.env.WHATSAPP_NUMBERS
-  ? process.env.WHATSAPP_NUMBERS.split(",").map((n) => n.trim())
-  : [];
-
 const SUCCESS_URL = process.env.STRIPE_SUCCESS_URL;
 const CANCEL_URL = process.env.STRIPE_CANCEL_URL;
 
@@ -42,6 +41,7 @@ const CANCEL_URL = process.env.STRIPE_CANCEL_URL;
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// Assurez-vous que le dossier public existe pour le logo
 app.use(express.static(path.join(__dirname, "public")));
 
 // =======================
@@ -115,7 +115,8 @@ async function syncCalendars() {
 
   for (const url of calendars) {
     try {
-      const data = await fetch(url).then((r) => r.text());
+      const response = await fetch(url);
+      const data = await response.text();
       const parsed = ical.parseICS(data);
 
       for (const key in parsed) {
@@ -141,7 +142,9 @@ async function syncCalendars() {
   console.log("Sync iCal terminée. Réservations plateformes :", remoteBookings.length);
 }
 
+// Sync au démarrage
 syncCalendars();
+// Sync toutes les heures
 setInterval(syncCalendars, 60 * 60 * 1000);
 
 // =======================
@@ -307,12 +310,12 @@ app.post("/create-checkout-session", async (req, res) => {
         subject: "Confirmation de votre réservation – Le Nid des Alpes",
         html: `
           <h2>Merci pour votre réservation 🌿</h2>
-          <p>Votre séjour au <strong>Nid des Alpes</strong> est bien enregistré.</p>
+          <p>Votre séjour au <strong>Le Nid des Alpes</strong> est bien enregistré.</p>
           <p><strong>Montant payé :</strong> ${(amount / 100).toFixed(2)} €</p>
           <p><strong>Période :</strong> du ${startDate} au ${endDate}</p>
           <p>Un dépôt de garantie par empreinte bancaire est appliqué conformément aux CGV.</p>
           <br>
-          <p>À très bientôt au Nid des Alpes.</p>
+          <p>À très bientôt au Le Nid des Alpes.</p>
         `,
       },
       (err) => {
@@ -350,7 +353,9 @@ app.post("/api/chat", (req, res) => {
 // =======================
 // Démarrage serveur
 // =======================
-require("./cron/autoMessages.js");
+// Chargement du cron job
+import "./cron/autoMessages.js";
+
 app.listen(PORT, () => {
   console.log(`Serveur actif sur le port ${PORT}`);
 });

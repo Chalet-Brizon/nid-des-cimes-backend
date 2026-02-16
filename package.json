@@ -1,7 +1,8 @@
 {
-  "name": "le-nid-savoyard-backend",
+  "name": "le-nid-des-alpes-backend",
   "version": "1.0.0",
-  "description": "Backend minimal pour Le Nid Savoyard - exemple",
+  "type": "module",
+  "description": "Backend minimal pour Le Nid des Alpes - exemple",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -20,6 +21,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "license": "ISC"
 }
