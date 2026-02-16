@@ -1,3 +1,7 @@
+// Remplacez :
+// const { messageJ0, ... } = require("./templates.js");
+// Par :
+import templates from "./templates.js";
 const {
   messageJ0,
   messageJ7,
@@ -5,12 +9,18 @@ const {
   messageJ1,
   messageJ1Depart,
   messageJplus1
-} = require("./templates.js");
+} = templates;
 
-const { sendEmail } = require("./mailer/sendEmail.js");
+// Remplacez :
+// const { sendEmail } = require("./mailer/sendEmail.js");
+// Par :
+import { sendEmail } from "./mailer/sendEmail.js";
 
-// 🔥 Paramètres dynamiques
-const settings = require("./settings.json");
+// Remplacez :
+// const settings = require("./settings.json");
+// Par :
+import settings from "./settings.json" assert { type: "json" };
+
 const establishment = settings.establishments[0];
 
 
@@ -224,8 +234,10 @@ async function sendMessageJplus1(reservation) {
   });
 }
 
-
-module.exports = {
+// Remplacez :
+// module.exports = { ... }
+// Par :
+export default {
   sendMessageJ0,
   sendMessageJ7,
   sendMessageJ3,
