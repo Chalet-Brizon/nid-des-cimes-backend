@@ -1,5 +1,4 @@
-// ===============================
-// AUTO-MESSAGES – CRON QUOTIDIEN
+// // AUTO-MESSAGES – CRON QUOTIDIEN
 // ===============================
 
 require("dotenv").config();
@@ -7,6 +6,7 @@ const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 
+// 📌 Correctement importé depuis le dossier message
 const {
   sendMessageJ0,
   sendMessageJ7,
@@ -14,11 +14,10 @@ const {
   sendMessageJ1,
   sendMessageJ1Depart,
   sendMessageJplus1
-} = require("../sendMessage.js");
+} = require('../message/sendMessage.js'); // ⚠️ Supprimez le "const sendMessage =" qui était ici
 
 // 📌 Chemin vers ton fichier de réservations
 const RESA_FILE = path.join(process.cwd(), "data", "reservations.json");
-
 // 📌 Fonction utilitaire : différence en jours
 function diffDays(date1, date2) {
   const d1 = new Date(date1);
