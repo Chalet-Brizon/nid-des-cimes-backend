@@ -14,7 +14,7 @@ const {
   sendMessageJ1,
   sendMessageJ1Depart,
   sendMessageJplus1
-} = require('../message/sendMessage.js'); // ⚠️ Supprimez le "const sendMessage =" qui était ici
+} = require('../message/sendMessage.js'); 
 
 // 📌 Chemin vers ton fichier de réservations
 const RESA_FILE = path.join(process.cwd(), "data", "reservations.json");
@@ -112,3 +112,4 @@ cron.schedule("0 8 * * *", async () => {
   saveReservations(reservations);
   console.log("✔ CRON terminé.");
 });
+// ⚠️ L'accolade fermante en trop était ici
