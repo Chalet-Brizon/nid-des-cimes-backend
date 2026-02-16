@@ -28,7 +28,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Lire settings.json manuellement
-const settingsPath = path.join(__dirname, 'settings.json');
+// On remonte d'un dossier (..) pour atteindre la racine
+const settingsPath = path.join(__dirname, '..', 'settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
 const establishment = settings.establishments[0];
